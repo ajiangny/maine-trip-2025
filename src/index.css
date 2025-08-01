@@ -1,0 +1,15 @@
+/* src/index.css */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* 🚫 Prevent scrolling */
+  height: 100%;
+  width: 100%;
+  font-family: 'GourmetEatery', sans-serif;
+}
+@font-face {
+  font-family: 'GourmetEatery';
+  src: url('./assets/fonts/GourmetEatery.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
