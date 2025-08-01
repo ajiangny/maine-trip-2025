@@ -1,5 +1,5 @@
 // src/components/GameMap.tsx
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { Car } from "./Car";
 import day1 from "../assets/backgrounds/portland.jpg";
 import day2 from "../assets/backgrounds/ogunquit.jpg";
@@ -92,6 +92,8 @@ import day7_12 from "../assets/photos/day7/day7_12.jpg";
 import day7_13 from "../assets/photos/day7/day7_13.jpg";
 import day7_14 from "../assets/photos/day7/day7_14.jpg";
 import day7_15 from "../assets/photos/day7/day7_15.jpg";
+import bgm from "../assets/audio/bgm.mp3";
+
 
 const PHOTOS = [
     {
@@ -794,7 +796,18 @@ export const GameMap: React.FC = () => {
     
     const [carX, setCarX] = useState(0);
     const [direction, setDirection] = useState<"left" | "right">("right");
-  
+
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+    const [isMusicPlaying, setIsMusicPlaying] = useState(true);
+
+    // Auto-play when mounted
+    useEffect(() => {
+      if (audioRef.current) {
+        audioRef.current.volume = 0.3; // optional: lower volume
+        audioRef.current.play().catch(() => {}); // catch autoplay block
+      }
+    }, []);
+
     // This is the state logic
     const [zoneWidth, setZoneWidth] = useState(window.innerWidth);
     const [isMoving, setIsMoving] = useState(false);
@@ -933,6 +946,37 @@ export const GameMap: React.FC = () => {
     onClose={() => setSelectedPhoto(null)}
   />
 )}
+
+{/* Audio element */}
+<audio ref={audioRef} loop src={bgm} />
+
+{/* Music toggle button */}
+<button
+  onClick={() => {
+    if (!audioRef.current) return;
+    if (isMusicPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setIsMusicPlaying(!isMusicPlaying);
+  }}
+  style={{
+    position: "fixed",
+    top: "16px",
+    right: "16px",
+    zIndex: 1000,
+    padding: "10px 14px",
+    borderRadius: "8px",
+    backgroundColor: "#ffffffaa",
+    border: "1px solid #ccc",
+    fontWeight: "bold",
+    fontFamily: "sans-serif",
+    cursor: "pointer"
+  }}
+>
+  {isMusicPlaying ? "🔊 Music On" : "🔇 Music Off"}
+</button>
       
           {/* Car stays visually fixed in center logic */}
           <Car screenX={screenX} direction={direction} />
