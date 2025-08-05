@@ -28,8 +28,10 @@ export const GameMap: React.FC = () => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [userToggledMusic, setUserToggledMusic] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [selectedPhoto, setSelectedPhoto] = useState<null | typeof PHOTOS[0]>(null);
-  const openPhotoModal = (photo: typeof PHOTOS[0]) => setSelectedPhoto(photo);
+  const [selectedPhoto, setSelectedPhoto] = useState<null | (typeof PHOTOS)[0]>(
+    null
+  );
+  const openPhotoModal = (photo: (typeof PHOTOS)[0]) => setSelectedPhoto(photo);
   const [carX, setCarX] = useState(0);
   const [direction, setDirection] = useState<"left" | "right">("right");
 
@@ -37,7 +39,7 @@ export const GameMap: React.FC = () => {
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = 0.3; // optional: lower volume
-      audioRef.current.play().catch(() => { }); // catch autoplay block
+      audioRef.current.play().catch(() => {}); // catch autoplay block
     }
   }, []);
 
@@ -58,53 +60,57 @@ export const GameMap: React.FC = () => {
   // Derived values based on current zone width
   const carWidth = zoneWidth * 0.12;
   const halfCarWidth = carWidth / 2;
-  const worldWidth = useMemo(() => BACKGROUND_ZONES.length * zoneWidth, [zoneWidth]);
-
+  const worldWidth = useMemo(
+    () => BACKGROUND_ZONES.length * zoneWidth,
+    [zoneWidth]
+  );
 
   const handleKeyDown = (e: KeyboardEvent) => {
-  if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-  setIsMoving(true);
-  clearTimeout((handleKeyDown as any)._timeout);
-  (handleKeyDown as any)._timeout = setTimeout(() => setIsMoving(false), 150);
-}
-
-
-  // ✅ Only play if:
-  // - music hasn't started before
-  // - user hasn't toggled the music manually
-  // - audio is available
-  if (!hasStartedMusic && !userToggledMusic && audioRef.current) {
-    const audio = audioRef.current;
-    audio.volume = 0.3;
-    audio.play()
-      .then(() => {
-        setIsMusicPlaying(true);
-      })
-      .catch((err) => {
-        console.warn("Auto-play blocked:", err);
-      });
-    setHasStartedMusic(true); // mark that we tried once
-  }
-
-  // Movement logic
-  setCarX((prev) => {
-    if (e.key === "ArrowRight") {
-      setDirection("right");
-      return Math.min(prev + 20, worldWidth - halfCarWidth);
+    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+      setIsMoving(true);
+      clearTimeout((handleKeyDown as any)._timeout);
+      (handleKeyDown as any)._timeout = setTimeout(
+        () => setIsMoving(false),
+        150
+      );
     }
-    if (e.key === "ArrowLeft") {
-      setDirection("left");
-      return Math.max(prev - 20, halfCarWidth);
-    }
-    return prev;
-  });
-};
 
+    // ✅ Only play if:
+    // - music hasn't started before
+    // - user hasn't toggled the music manually
+    // - audio is available
+    if (!hasStartedMusic && !userToggledMusic && audioRef.current) {
+      const audio = audioRef.current;
+      audio.volume = 0.3;
+      audio
+        .play()
+        .then(() => {
+          setIsMusicPlaying(true);
+        })
+        .catch((err) => {
+          console.warn("Auto-play blocked:", err);
+        });
+      setHasStartedMusic(true); // mark that we tried once
+    }
+
+    // Movement logic
+    setCarX((prev) => {
+      if (e.key === "ArrowRight") {
+        setDirection("right");
+        return Math.min(prev + 20, worldWidth - halfCarWidth);
+      }
+      if (e.key === "ArrowLeft") {
+        setDirection("left");
+        return Math.max(prev - 20, halfCarWidth);
+      }
+      return prev;
+    });
+  };
 
   useEffect(() => {
-  window.addEventListener("keydown", handleKeyDown);
-  return () => window.removeEventListener("keydown", handleKeyDown);
-}, [hasStartedMusic, userToggledMusic, isMusicPlaying]);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [hasStartedMusic, userToggledMusic, isMusicPlaying]);
 
   const halfViewport = zoneWidth / 2;
 
@@ -112,15 +118,15 @@ export const GameMap: React.FC = () => {
     carX < halfViewport
       ? 0
       : carX > worldWidth - halfViewport
-        ? worldWidth - zoneWidth
-        : carX - halfViewport;
+      ? worldWidth - zoneWidth
+      : carX - halfViewport;
 
   const screenX =
     carX < halfViewport
       ? carX
       : carX > worldWidth - halfViewport
-        ? carX - cameraOffset
-        : halfViewport;
+      ? carX - cameraOffset
+      : halfViewport;
 
   return (
     <div
@@ -144,44 +150,44 @@ export const GameMap: React.FC = () => {
           padding: 0,
           margin: 0,
         }}
+      >
+        {PHOTOS.map((photo) => {
+          const xPos = photo.zoneIndex * zoneWidth + photo.xPercent * zoneWidth;
+          const yPos = photo.bottomPercent * window.innerHeight;
 
-      >{PHOTOS.map((photo) => {
-        const xPos = photo.zoneIndex * zoneWidth + photo.xPercent * zoneWidth;
-        const yPos = photo.bottomPercent * window.innerHeight;
+          // 🚫 Hide photo until car gets close enough (e.g. 200px before photo)
+          const revealDistance = 200;
+          const isVisible = carX >= xPos - revealDistance;
 
-        // 🚫 Hide photo until car gets close enough (e.g. 200px before photo)
-        const revealDistance = 200;
-        const isVisible = carX >= xPos - revealDistance;
-
-  return (
-    <img
-      key={photo.id}
-      src={photo.image}
-      alt={photo.caption}
-      onClick={() => isVisible && openPhotoModal(photo)}
-      style={{
-        position: "absolute",
-        left: `${xPos}px`,
-        bottom: `${yPos}px`,
-        width: `${zoneWidth * 0.05}px`,
-        height: `${zoneWidth * 0.06}px`,
-        objectFit: "cover",
-        border: "6px solid white",
-        boxShadow: "0 0 10px rgba(0,0,0,0.4)",
-        transform: isMoving
-          ? direction === "left"
-            ? "rotate(-6deg)"
-            : "rotate(6deg)"
-          : "rotate(0deg)",
-        transition: "transform 0.3s ease",
-        cursor: "pointer",
-        zIndex: 10,
-        opacity: isVisible ? 1 : 0,         // 👈 hide until nearby
-        pointerEvents: isVisible ? "auto" : "none", // 👈 disable click
-      }}
-    />
-  );
-      })}
+          return (
+            <img
+              key={photo.id}
+              src={photo.image}
+              alt={photo.caption}
+              onClick={() => isVisible && openPhotoModal(photo)}
+              style={{
+                position: "absolute",
+                left: `${xPos}px`,
+                bottom: `${yPos}px`,
+                width: `${zoneWidth * 0.05}px`,
+                height: `${zoneWidth * 0.06}px`,
+                objectFit: "cover",
+                border: "6px solid white",
+                boxShadow: "0 0 10px rgba(0,0,0,0.4)",
+                transform: isMoving
+                  ? direction === "left"
+                    ? "rotate(-6deg)"
+                    : "rotate(6deg)"
+                  : "rotate(0deg)",
+                transition: "transform 0.3s ease",
+                cursor: "pointer",
+                zIndex: 10,
+                opacity: isVisible ? 1 : 0, // 👈 hide until nearby
+                pointerEvents: isVisible ? "auto" : "none", // 👈 disable click
+              }}
+            />
+          );
+        })}
 
         {/* Side-by-side background panels */}
         {BACKGROUND_ZONES.map((zone) => (
@@ -213,47 +219,46 @@ export const GameMap: React.FC = () => {
 
       {/* Music toggle button */}
       <button
-  onClick={() => {
-    if (!audioRef.current) return;
+        onClick={() => {
+          if (!audioRef.current) return;
 
-    // 🚫 This is what locks out keypress control
-    setUserToggledMusic(true);
+          // 🚫 This is what locks out keypress control
+          setUserToggledMusic(true);
 
-    if (isMusicPlaying) {
-      audioRef.current.pause();
-      setIsMusicPlaying(false);
-    } else {
-      audioRef.current.volume = 0.3;
-      audioRef.current.play().then(() => {
-        setIsMusicPlaying(true);
-      }).catch((err) => {
-        console.warn("Play failed:", err);
-      });
-    }
-  }}
-  style={{
-    position: "fixed",
-    top: "16px",
-    right: "16px",
-    zIndex: 1000,
-    padding: "10px 14px",
-    borderRadius: "8px",
-    backgroundColor: "#ffffffaa",
-    border: "1px solid #ccc",
-    fontWeight: "bold",
-    fontFamily: "sans-serif",
-    cursor: "pointer"
-  }}
->
-  {isMusicPlaying ? "🔊 Music On" : "🔇 Music Off"}
-</button>
+          if (isMusicPlaying) {
+            audioRef.current.pause();
+            setIsMusicPlaying(false);
+          } else {
+            audioRef.current.volume = 0.3;
+            audioRef.current
+              .play()
+              .then(() => {
+                setIsMusicPlaying(true);
+              })
+              .catch((err) => {
+                console.warn("Play failed:", err);
+              });
+          }
+        }}
+        style={{
+          position: "fixed",
+          top: "16px",
+          right: "16px",
+          zIndex: 1000,
+          padding: "10px 14px",
+          borderRadius: "8px",
+          backgroundColor: "#ffffffaa",
+          border: "1px solid #ccc",
+          fontWeight: "bold",
+          fontFamily: "sans-serif",
+          cursor: "pointer",
+        }}
+      >
+        {isMusicPlaying ? "🔊 Music On" : "🔇 Music Off"}
+      </button>
 
       {/* Car stays visually fixed in center logic */}
       <Car screenX={screenX} direction={direction} />
     </div>
-
-
-
   );
-
 };
