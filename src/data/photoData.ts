@@ -47,7 +47,7 @@ export const PHOTOS = [
         zoneIndex: 0,
         xPercent: 0.46,
         bottomPercent: 0.36,
-        caption: "Jess checking out vinyls",
+        caption: "Beauty checking out vinyls",
     },
     {
         id: "portland_midday3",
@@ -79,7 +79,7 @@ export const PHOTOS = [
         zoneIndex: 0,
         xPercent: 0.7,
         bottomPercent: 0.20,
-        caption: "Oysters! Jess ate a lot :)",
+        caption: "Oysters! We ate a lot :)",
     },
     {
         id: "ogunquit1",
@@ -103,7 +103,7 @@ export const PHOTOS = [
         zoneIndex: 1,
         xPercent: 0.3,
         bottomPercent: 0.57,
-        caption: "Jess on a bridge :)",
+        caption: "Jess on a bridge looking majestic :)",
     },
     {
         id: "ogunquit4",
@@ -183,7 +183,7 @@ export const PHOTOS = [
         zoneIndex: 2,
         xPercent: 0.05,
         bottomPercent: 0.4,
-        caption: "Morning Calm",
+        caption: "Our very first hike in Maine!",
     },
     {
         id: "day3_2",
@@ -191,7 +191,7 @@ export const PHOTOS = [
         zoneIndex: 2,
         xPercent: 0.12,
         bottomPercent: 0.45,
-        caption: "Breakfast Views",
+        caption: "Another beautiful view w Jess",
     },
     {
         id: "day3_3",
@@ -199,7 +199,7 @@ export const PHOTOS = [
         zoneIndex: 2,
         xPercent: 0.20,
         bottomPercent: 0.42,
-        caption: "Lakeside Laugh",
+        caption: "Lighthouse in Cape Elizabeth",
     },
     {
         id: "day3_4",
@@ -207,7 +207,7 @@ export const PHOTOS = [
         zoneIndex: 2,
         xPercent: 0.28,
         bottomPercent: 0.35,
-        caption: "Cabin Vibes",
+        caption: "Um...",
     },
     {
         id: "day3_5",
@@ -215,7 +215,7 @@ export const PHOTOS = [
         zoneIndex: 2,
         xPercent: 0.36,
         bottomPercent: 0.47,
-        caption: "Nature Stroll",
+        caption: "Legendary Bean Bootmobile!",
     },
     {
         id: "day3_6",
@@ -223,7 +223,7 @@ export const PHOTOS = [
         zoneIndex: 2,
         xPercent: 0.44,
         bottomPercent: 0.4,
-        caption: "Sun & Shade",
+        caption: "My lover on the boat",
     },
     {
         id: "day3_7",
@@ -231,7 +231,7 @@ export const PHOTOS = [
         zoneIndex: 2,
         xPercent: 0.52,
         bottomPercent: 0.39,
-        caption: "Quiet Spot",
+        caption: "Jess and Andrew eating it up",
     },
     {
         id: "day3_8",
@@ -239,7 +239,7 @@ export const PHOTOS = [
         zoneIndex: 2,
         xPercent: 0.60,
         bottomPercent: 0.41,
-        caption: "Golden Hour",
+        caption: "Baddie and her Nerd",
     },
     {
         id: "day3_9",
@@ -247,7 +247,7 @@ export const PHOTOS = [
         zoneIndex: 2,
         xPercent: 0.68,
         bottomPercent: 0.43,
-        caption: "Docked Moment",
+        caption: "When an old couple offered to take a photo for us :)",
     },
     {
         id: "day3_10",
@@ -255,7 +255,7 @@ export const PHOTOS = [
         zoneIndex: 2,
         xPercent: 0.76,
         bottomPercent: 0.37,
-        caption: "Canoe Calm",
+        caption: "Unforgettable sunset w Jess",
     },
     {
         id: "day3_11",
@@ -263,7 +263,7 @@ export const PHOTOS = [
         zoneIndex: 2,
         xPercent: 0.84,
         bottomPercent: 0.44,
-        caption: "Evening Look",
+        caption: "ABSOLUTELY GORGEOUS",
     },
     {
         id: "day3_12",
@@ -271,7 +271,7 @@ export const PHOTOS = [
         zoneIndex: 2,
         xPercent: 0.92,
         bottomPercent: 0.42,
-        caption: "Last Light",
+        caption: "Yummerz",
     },
     {
         id: "day4_1",
