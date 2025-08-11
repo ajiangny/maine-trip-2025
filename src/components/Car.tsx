@@ -8,37 +8,43 @@ type Props = {
 };
 
 export const Car: React.FC<Props> = ({ screenX, direction }) => {
-    return (
-      <>
-        {/* Inline keyframe style */}
-        <style>
-          {`
-            @keyframes bump {
-              0%, 100% {
-                transform: translateY(0) ${direction === "left" ? "scaleX(-1)" : "scaleX(1)"};
-              }
-              50% {
-                transform: translateY(-5px) ${direction === "left" ? "scaleX(-1)" : "scaleX(1)"};
-              }
-            }
-          `}
-        </style>
-  
+  return (
+    <>
+      {/* Keyframes for the car's gentle bounce */}
+      <style>
+        {`
+          @keyframes bump {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+          }
+        `}
+      </style>
+
+      {/* Wrapper handles positioning and bounce animation */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "5vh",
+          left: `calc(${screenX}px - 6vw)`,
+          width: "12vw",
+          height: "auto",
+          zIndex: 10,
+          transition: "left 0.1s linear",
+          animation: "bump 0.6s ease-in-out infinite",
+        }}
+      >
+        {/* Image flips horizontally based on travel direction */}
         <img
           src={carImg}
           alt="car"
           style={{
-            position: "absolute",
-            bottom: "5vh",
-            left: `calc(${screenX}px - 6vw)`,
-            width: "12vw",
+            width: "100%",
             height: "auto",
-            zIndex: 10,
             imageRendering: "pixelated",
-            transition: "left 0.1s linear",
-            animation: "bump 0.6s ease-in-out infinite",
+            transform: direction === "left" ? "scaleX(-1)" : "scaleX(1)",
           }}
         />
-      </>
-    );
-  };
+      </div>
+    </>
+  );
+};
