@@ -8,6 +8,7 @@ const STORAGE_KEY = 'site_unlocked';
 export function PasswordGate({ children }: { children: React.ReactNode }) {
   const expected = import.meta.env.VITE_ACCESS_PASSWORD as string | undefined;
   const [input, setInput] = useState('');
+  const [show, setShow] = useState(false);
   const [unlocked, setUnlocked] = useState<boolean>(() => {
     if (!expected) return true; // no password configured
     return localStorage.getItem(STORAGE_KEY) === 'true';
@@ -41,15 +42,28 @@ export function PasswordGate({ children }: { children: React.ReactNode }) {
   return (
     <div style={overlayStyle}>
       <form onSubmit={submit} style={panelStyle}>
-        <h1 style={{ margin: 0, fontSize: '1.4rem' }}>Enter Password</h1>
-        <input
-          type="password"
+        <h1 style={{ margin: 0, fontSize: '1.35rem', letterSpacing: '.5px' }}>Enter Password</h1>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
+          <input
+            type={show ? 'text' : 'password'}
             autoFocus
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          style={inputStyle}
-          placeholder="Password"
-        />
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            style={inputStyle}
+            placeholder="Password"
+          />
+          <label style={toggleRowStyle}>
+            <input
+              type="checkbox"
+              checked={show}
+              onChange={() => setShow(s => !s)}
+              style={checkboxStyle}
+            />
+            <span style={{ fontSize: '.75rem', opacity: 0.85 }}>
+              {show ? 'Hide password' : 'Show password'}
+            </span>
+          </label>
+        </div>
         {error && <div style={errorStyle}>{error}</div>}
         <button type="submit" style={buttonStyle}>Unlock</button>
       </form>
@@ -72,25 +86,39 @@ const overlayStyle: React.CSSProperties = {
 };
 
 const panelStyle: React.CSSProperties = {
-  background: 'rgba(0,0,0,0.55)',
-  padding: '2.2rem 2.4rem 2rem',
-  borderRadius: '18px',
-  width: 'min(90%, 420px)',
+  background: 'rgba(0,0,0,0.50)',
+  padding: '1.9rem 2rem 1.6rem',
+  borderRadius: '20px',
+  width: 'min(90%, 400px)',
   display: 'flex',
   flexDirection: 'column',
   gap: '1rem',
-  boxShadow: '0 8px 32px -4px rgba(0,0,0,0.6)',
-  border: '1px solid rgba(255,255,255,0.15)'
+  boxShadow: '0 6px 28px -6px rgba(0,0,0,0.55)',
+  border: '1px solid rgba(255,255,255,0.12)',
+  backdropFilter: 'blur(2px)'
 };
 
 const inputStyle: React.CSSProperties = {
-  padding: '0.75rem 1rem',
-  fontSize: '1rem',
-  borderRadius: '10px',
-  border: '1px solid rgba(255,255,255,0.25)',
-  background: 'rgba(255,255,255,0.08)',
+  padding: '0.70rem 0.85rem',
+  fontSize: '0.95rem',
+  borderRadius: '12px',
+  border: '1px solid rgba(255,255,255,0.22)',
+  background: 'rgba(255,255,255,0.10)',
   color: '#fff',
   outline: 'none'
+};
+
+const toggleRowStyle: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '0.4rem',
+  userSelect: 'none'
+};
+
+const checkboxStyle: React.CSSProperties = {
+  width: '14px',
+  height: '14px',
+  cursor: 'pointer'
 };
 
 const buttonStyle: React.CSSProperties = {
