@@ -1,6 +1,7 @@
 // src/components/GameMap.tsx
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import { Car } from "./Car";
+import { MobileControls } from "./MobileControls";
 import day1 from "../assets/backgrounds/day1.jpg";
 import day2 from "../assets/backgrounds/day2.jpg";
 import day3 from "../assets/backgrounds/day3.jpg";
@@ -64,6 +65,26 @@ export const GameMap: React.FC = () => {
     () => BACKGROUND_ZONES.length * zoneWidth,
     [zoneWidth]
   );
+
+  const stepRight = () => {
+    setIsMoving(true);
+    clearTimeout((stepRight as any)._timeout);
+    (stepRight as any)._timeout = setTimeout(() => setIsMoving(false), 150);
+    setCarX((prev) => {
+      setDirection("right");
+      return Math.min(prev + 20, worldWidth - halfCarWidth);
+    });
+  };
+
+  const stepLeft = () => {
+    setIsMoving(true);
+    clearTimeout((stepLeft as any)._timeout);
+    (stepLeft as any)._timeout = setTimeout(() => setIsMoving(false), 150);
+    setCarX((prev) => {
+      setDirection("left");
+      return Math.max(prev - 20, halfCarWidth);
+    });
+  };
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
@@ -259,6 +280,14 @@ export const GameMap: React.FC = () => {
 
       {/* Car stays visually fixed in center logic */}
       <Car screenX={screenX} direction={direction} />
+
+      {/* Mobile touch controls (hidden on large screens via component CSS) */}
+      <MobileControls
+        onStepLeft={stepLeft}
+        onStepRight={stepRight}
+        onHoldLeft={stepLeft}
+        onHoldRight={stepRight}
+      />
     </div>
   );
 };
